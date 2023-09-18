@@ -3,6 +3,13 @@ import PySimpleGUI as sg
 import os
 
 
+def gerar_senha(valores):
+    char_list = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*'
+    chars = random.choices(char_list, k=int(valores['total_chars']))
+    new_pass = ''.join(chars)
+    return new_pass
+
+
 class PassGen:
     def __init__(self):
         """
@@ -31,9 +38,16 @@ class PassGen:
             evento, valores = self.janela.read()
             if evento == sg.WINDOW_CLOSED:
                 break
+            if evento == 'Gerar Senha':
+                nova_senha = gerar_senha(valores)
+                print(nova_senha)
+                self.salvar_senha(nova_senha, valores)
 
-    def salvar_senha(self):
-        pass
+    def salvar_senha(self, nova_senha, valores):
+        with open(r'C:\Users\danrl\OneDrive\Python\Gerador de Senhas\pass.txt', 'a', newline='') as arquivo:
+            arquivo.write(f"site: {valores['site']}, usuario: {valores['usuario']}, nova senha: {nova_senha}")
+
+        print('Arquivo salvo')
 
 
 gen = PassGen()
